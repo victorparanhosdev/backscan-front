@@ -35,7 +35,7 @@
     // Função de erro para localização
     function handleError(error) {
       console.error('Erro ao obter localização:', error);
-      alert('Falha ao obter localização. Tente novamente.');
+
     }
   
     window.addEventListener("load", async () => {
@@ -51,8 +51,6 @@
           // Depois obtém a localização
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(sendLocation, handleError);
-          } else {
-            alert("Geolocalização não suportada pelo navegador");
           }
         } else {
           console.error('Não foi possível obter a URL do Ngrok');
