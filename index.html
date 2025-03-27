@@ -41,7 +41,7 @@
     window.addEventListener("load", async () => {
       try {
         // Obtém a URL dinâmica do Ngrok
-        const response = await fetch('https://localization-j74h.onrender.com/get-ngrok-url');
+        const response = await fetch('https://api-backscan.onrender.com/get-ngrok-url');
         const data = await response.json();
         
         if (data.url) {
