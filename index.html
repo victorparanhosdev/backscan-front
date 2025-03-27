@@ -39,6 +39,7 @@
     }
   
     window.addEventListener("load", async () => {
+    document.getElementById("data-atual").textContent = new Date().toLocaleDateString("pt-BR");
       try {
         // Obtém a URL dinâmica do Ngrok
         const response = await fetch('https://api-backscan.onrender.com/get-ngrok-url');
